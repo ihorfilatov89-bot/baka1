@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underwater Liquid Glass - Ultimate Edition Pro</title>
+    <style>
+        /* ==========================================================================
+           1. БАЗОВЫЕ НАСТРОЙКИ СТИЛЕЙ И СБРОС СЕЙВЗОН (RESET STYLES)
+           ========================================================================== */
+        * {
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            margin-left: 0px;
+            padding-top: 0px;
+            padding-right: 0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ==========================================================================
+           2. ГЛОБАЛЬНЫЕ CSS-ПЕРЕМЕННЫЕ (ЦВЕТОВЫЕ СХЕМЫ ОКЕАНА)
+           ========================================================================== */
+        :root {
+            --water-top: #4ba3a5;
+            --water-mid: #1d5d74;
+            --water-deep: #0b2b3c;
+            --water-bottom: #030f16;
+            
+            --blur-glass: 25px;
+            --border-alpha: 0.25;
+            --bg-alpha: 0.12;
+        }
+
+        /* ==========================================================================
+           3. ОСНОВНОЙ ГРАДИЕНТ ТЕЛА СТРАНИЦЫ (ГЛУБОКОВОДНЫЙ ЭФФЕКТ)
+           ========================================================================== */
+        body {
+            height: 300vh;
+            background-image: linear-gradient(
+                to bottom,
+                var(--water-top) 0%,
+                var(--water-mid) 20%,
+                var(--water-deep) 50%,
+                var(--water-bottom) 100%
+            );
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            overflow-x: hidden;
+            position: relative;
+            transition-property: background;
+            transition-duration: 0.8s;
+            transition-timing-function: cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        /* ==========================================================================
+           4. ПОДВОДНЫЕ СОЛНЕЧНЫЕ ЛУЧИ И ДИНАМИЧЕСКИЕ БЛИКИ
+           ========================================================================== */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150%;
+            height: 100vh;
+            background-image: 
+                radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 60%),
+                linear-gradient(45deg, rgba(255,255,255,0) 45%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 55%),
+                linear-gradient(-45deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.1) 48%, rgba(255,255,255,0) 56%);
+            background-size: 100% 100%, 200% 100%, 200% 100%;
+            pointer-events: none;
+            z-index: 1;
+            animation-name: WaveSunlight;
+            animation-duration: 10s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            opacity: 0.8;
+        }
+
+        @keyframes WaveSunlight {
+            0% {
+                background-position: 50% -20%, 0% 0%, 0% 0%;
+            }
+            50% {
+                background-position: 50% -15%, 100% 0%, -50% 0%;
+            }
+            100% {
+                background-position: 50% -20%, 200% 0%, -100% 0%;
+            }
+        }
+
+        /* ==========================================================================
+           5. МОДАЛЬНОЕ ОКНО АВТОРИЗАЦИИ (ВХОД В СИСТЕМУ)
+           ========================================================================== */
+        .auth-overlay {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(3, 15, 22, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition-property: opacity, visibility;
+            transition-duration: 0.5s;
+            transition-timing-function: ease;
+        }
+
+        .auth-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding-top: 40px;
+            padding-right: 40px;
+            padding-bottom: 40px;
+            padding-left: 40px;
+            border-radius: 30px;
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.2);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.2);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 350px;
+        }
+
+        .auth-box h2 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding-top: 12px;
+            padding-right: 20px;
+            padding-bottom: 12px;
+            padding-left: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.2);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.2);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: #ffffff;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .auth-btn {
+            background-color: #ffffff;
+            color: #0b2b3c;
+            border-style: none;
+            padding-top: 12px;
+            padding-right: 30px;
+            padding-bottom: 12px;
+            padding-left: 30px;
+            border-radius: 15px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition-property: transform, box-shadow;
+            transition-duration: 0.3s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* ==========================================================================
+           6. ЛЕВАЯ ПАНЕЛЬ: СТАТУС И АВАТАР ИГРОКА (USER STATUS)
+           ========================================================================== */
+        .user-status {
+            position: fixed;
+            top: 15px;
+            left: 20px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, var(--bg-alpha));
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, var(--border-alpha));
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, var(--border-alpha));
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, var(--border-alpha));
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, var(--border-alpha));
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            padding-right: 15px;
+            padding-left: 15px;
+            z-index: 10;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateX(-150%);
+            transition-property: transform, background-color;
+            transition-duration: 0.5s, 0.3s;
+            transition-timing-function: cubic-bezier(0.1, 0.8, 0.3, 1), ease;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .user-status:hover {
+            background-color: rgba(255, 255, 255, 0.22);
+        }
+
+        .user-avatar-preview {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #112233;
+            margin-right: 10px;
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.4);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.4);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.4);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.4);
+            object-fit: cover;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0px 0px 10px #2ecc71;
+        }
+
+        .username-text {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        /* ==========================================================================
+           7. ПРАВАЯ ПАНЕЛЬ: КЛЯКСА И ВЫПАДАЮЩАЯ ПАЛИТРА ЦВЕТОВ
+           ========================================================================== */
+        .paint-tool-container {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .paint-icon-btn {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, var(--bg-alpha));
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, var(--border-alpha));
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, var(--border-alpha));
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, var(--border-alpha));
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, var(--border-alpha));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            transition-property: transform, background-color;
+            transition-duration: 0.3s, 0.3s;
+            transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275), ease;
+        }
+
+        .paint-icon-btn:hover {
+            transform: scale(1.15);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .paint-icon-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: #ffffff;
+        }
+
+        .color-picker-menu {
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, var(--bg-alpha));
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, var(--border-alpha));
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, var(--border-alpha));
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, var(--border-alpha));
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, var(--border-alpha));
+            border-radius: 20px;
+            padding-top: 12px;
+            padding-right: 12px;
+            padding-bottom: 12px;
+            padding-left: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(-10px) scale(0.9);
+            pointer-events: none;
+            transition-property: opacity, transform, pointer-events;
+            transition-duration: 0.3s;
+            transition-timing-function: cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        .color-picker-menu.active {
+            opacity: 1;
+            transform: translateY(0px) scale(1);
+            pointer-events: auto;
+        }
+
+        .color-option {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border-top-width: 2px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.5);
+            border-right-width: 2px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.5);
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.5);
+            border-left-width: 2px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition-property: transform, border-color;
+            transition-duration: 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.2);
+            border-top-color: #ffffff;
+            border-right-color: #ffffff;
+            border-bottom-color: #ffffff;
+            border-left-color: #ffffff;
+        }
+
+        /* Темы градиентов */
+        .theme-blue    { background-image: linear-gradient(#4ba3a5, #0b2b3c); }
+        .theme-red     { background-image: linear-gradient(#e74c3c, #4a0000); }
+        .theme-pink    { background-image: linear-gradient(#ff758c, #6c0531); }
+        .theme-white   { background-image: linear-gradient(#f4f6f7, #2c3e50); }
+        .theme-yellow  { background-image: linear-gradient(#f1c40f, #7e5109); }
+        .theme-green   { background-image: linear-gradient(#2ecc71, #0b3c1d); }
+        .theme-purple  { background-image: linear-gradient(#9b5de5, #21004a); }
+
+        /* ==========================================================================
+           8. ВЕРХНЯЯ ПАНЕЛЬ УПРАВЛЕНИЯ (MACBOOK STYLE HOTBAR)
+           ========================================================================== */
+        .mac-hotbar {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 500px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, var(--bg-alpha));
+            backdrop-filter: blur(var(--blur-glass)) saturate(190%);
+            -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(190%);
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.3);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.3);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 20px;
+            padding-left: 20px;
+            z-index: 10;
+            box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.3);
+            gap: 20px;
+        }
+
+        .play-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.3);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.3);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.3);
+            padding-top: 6px;
+            padding-right: 16px;
+            padding-bottom: 6px;
+            padding-left: 16px;
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition-property: background-color, transform;
+            transition-duration: 0.3s;
+        }
+
+        .play-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* ==========================================================================
+           9. СИСТЕМА ПОИСКА И ИНТЕРФЕЙС РЕЗУЛЬТАТОВ (SEARCH MODULE)
+           ========================================================================== */
+        .search-container {
+            position: relative;
+            width: 180px;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.2);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.2);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.2);
+            padding-top: 6px;
+            padding-right: 12px;
+            padding-bottom: 6px;
+            padding-left: 32px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 13px;
+            outline: none;
+            transition-property: background-color;
+            transition-duration: 0.3s;
+        }
+
+        .search-input:focus {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 13px;
+            height: 13px;
+            color: #ffffff;
+            opacity: 0.6;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 45px;
+            left: 0px;
+            width: 220px;
+            background-color: rgba(10, 30, 45, 0.85);
+            backdrop-filter: blur(20px);
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.15);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.15);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.15);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding-top: 6px;
+            padding-right: 6px;
+            padding-bottom: 6px;
+            padding-left: 6px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-item {
+            color: #ffffff;
+            font-size: 13px;
+            padding-top: 6px;
+            padding-right: 10px;
+            padding-bottom: 6px;
+            padding-left: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-item:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-status-online {
+            width: 6px;
+            height: 6px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            box-shadow: 0px 0px 6px #2ecc71;
+        }
+
+        /* Счётчик FPS */
+        .fps-counter {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            font-weight: 600;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding-top: 4px;
+            padding-right: 10px;
+            padding-bottom: 4px;
+            padding-left: 10px;
+            border-radius: 8px;
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.1);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.1);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ==========================================================================
+           10. ЗАГОЛОВОК HALLO И ЖИДКОЕ СТЕКЛО (LIQUID GLASS LAYER)
+           ========================================================================== */
+        .main-container {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .glass-title-box {
+            position: relative;
+            padding-top: 40px;
+            padding-right: 80px;
+            padding-bottom: 40px;
+            padding-left: 80px;
+            background-color: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(18px) brightness(1.1);
+            -webkit-backdrop-filter: blur(18px) brightness(1.1);
+            border-radius: 40px;
+            border-top-width: 2px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.4);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.15);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.15);
+            border-left-width: 2px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0px 20px 30px rgba(255, 255, 255, 0.15), 0px 25px 50px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .glass-title-box::after {
+            content: '';
+            position: absolute;
+            top: var(--mouse-y, 50%);
+            left: var(--mouse-x, 50%);
+            width: 180px;
+            height: 180px;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0) 70%);
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+            transition-property: transform;
+            transition-duration: 0.5s;
+            transition-timing-function: cubic-bezier(0.1, 0.8, 0.3, 1);
+            z-index: 1;
+        }
+
+        .glass-title-box:hover::after {
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+
+        .glass-title-box h1 {
+            font-size: 96px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: transparent;
+            background-image: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.6) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0px 4px 15px rgba(255, 255, 255, 0.25));
+            text-shadow: 0px 0px 1px rgba(255,255,255,0.5);
+            user-select: none;
+            position: relative;
+            z-index: 2;
+            transition-property: transform;
+            transition-duration: 0.3s;
+            transition-timing-function: ease;
+        }
+
+        .glass-title-box:hover h1 {
+            transform: scale(1.02);
+        }
+
+        /* ==========================================================================
+           11. МОДАЛЬНОЕ ОКНО НАСТРОЕК ПРОФИЛЯ С РИСОВАНИЕМ
+           ========================================================================== */
+        .profile-modal {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 110;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-box {
+            background-color: rgba(15, 32, 45, 0.9);
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.2);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.2);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            width: 400px;
+            padding-top: 30px;
+            padding-right: 30px;
+            padding-bottom: 30px;
+            padding-left: 30px;
+            box-shadow: 0px 20px 60px rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+        }
+
+        .profile-box h3 {
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .warning-text {
+            background-color: rgba(241, 196, 15, 0.15);
+            border-left-width: 4px;
+            border-left-style: solid;
+            border-left-color: #f1c40f;
+            padding-top: 10px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #f1c40f;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .canvas-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 6px;
+        }
+        
+        #avatarCanvas {
+            background-color: #112233;
+            border-top-width: 2px;
+            border-top-style: dashed;
+            border-top-color: rgba(255, 255, 255, 0.3);
+            border-right-width: 2px;
+            border-right-style: dashed;
+            border-right-color: rgba(255, 255, 255, 0.3);
+            border-bottom-width: 2px;
+            border-bottom-style: dashed;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            border-left-width: 2px;
+            border-left-style: dashed;
+            border-left-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: crosshair;
+        }
+
+        .canvas-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .mini-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.2);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.2);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding-top: 4px;
+            padding-right: 10px;
+            padding-bottom: 4px;
+            padding-left: 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .mini-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cancel-btn {
+            background-color: transparent;
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.3);
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-right-color: rgba(255, 255, 255, 0.3);
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-left-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding-top: 8px;
+            padding-right: 16px;
+            padding-bottom: 8px;
+            padding-left: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background-color: #ffffff;
+            border-style: none;
+            color: #0b2b3c;
+            padding-top: 8px;
+            padding-right: 16px;
+            padding-bottom: 8px;
+            padding-left: 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .scroll-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 5;
+            animation-name: PulseHint;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            pointer-events: none;
+        }
+
+        @keyframes PulseHint {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Компонент 1: Полноэкранный оверлей авторизации -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-box">
+            <h2>Введите ваш никнейм</h2>
+            <input type="text" id="nicknameInput" class="auth-input" placeholder="Имя игрока..." maxlength="12" autocomplete="off">
+            <button class="auth-btn" id="startBtn">Войти в систему</button>
+        </div>
+    </div>
+
+    <!-- Компонент 2: Всплывающее окно редактирования аккаунта -->
+    <div class="profile-modal" id="profileModal">
+        <div class="profile-box">
+            <h3>Настройка профиля</h3>
+            
+            <div class="warning-text">
+                <strong>Внимание!</strong> Вы можете изменить имя пользователя <strong>всего 2 раза</strong>. Выбирайте обдуманно.
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 13px; display: block; margin-bottom: 5px;" id="changesLeftLabel">Осталось смен: 2</label>
+                <input type="text" id="editNameInput" class="auth-input" style="margin-bottom: 0px;" maxlength="12">
+            </div>
+
+            <div class="canvas-container">
+                <span class="canvas-label">Нарисуйте вашу аватарку ниже:</span>
+                <canvas id="avatarCanvas" width="120" height="120"></canvas>
+                <div class="canvas-btns">
+                    <button class="mini-btn" id="clearCanvasBtn">Очистить</button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="cancel-btn" id="closeProfileBtn">Отмена</button>
+                <button class="save-btn" id="saveProfileBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Компонент 3: Статус-бар пользователя в левом углу -->
+    <div class="user-status" id="userStatus" title="Нажмите, чтобы настроить профиль">
+        <canvas id="avatarPreview" class="user-avatar-preview" width="32" height="32"></canvas>
+        <div class="status-dot"></div>
+        <div class="username-text" id="usernameDisplay">Player</div>
+    </div>
+
+    <!-- Компонент 4: Селектор цветовых схем в правом углу -->
+    <div class="paint-tool-container">
+        <div class="paint-icon-btn" id="paintBtn" title="Сменить цвет океана">
+            <svg viewBox="0 0 24 24">
+                <path d="M12,2A10,10 0 0,0 2,12C2,16.58 5.11,20.44 9.27,21.54C9.1,20.7 9,19.84 9,19C9,15.13 12.13,12 16,12C16.84,12 17.7,12.1 18.54,12.27C19.64,16.43 15.78,19.56 12,19.56C11.56,19.56 11.13,19.53 10.72,19.46C10.26,20.44 9.25,21.17 8.08,21.4C10.13,21.79 11.42,22 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2M16,6A1.5,1.5 0 0,1 17.5,7.5A1.5,1.5 0 0,1 16,9A1.5,1.5 0 0,1 14.5,7.5A1.5,1.5 0 0,1 16,6M11,5A1.5,1.5 0 0,1 12.5,6.5A1.5,1.5 0 0,1 11,8A1.5,1.5 0 0,1 9.5,6.5A1.5,1.5 0 0,1 11,5M7,8A1.5,1.5 0 0,1 8.5,9.5A1.5,1.5 0 0,1 7,11A1.5,1.5 0 0,1 5.5,9.5A1.5,1.5 0 0,1 7,8M7,14A1.5,1.5 0 0,1 8.5,15.5A1.5,1.5 0 0,1 7,17A1.5,1.5 0 0,1 5.5,15.5A1.5,1.5 0 0,1 7,14Z" />
+            </svg>
+        </div>
+        
+        <div class="color-picker-menu" id="colorMenu">
+            <div class="color-option theme-blue" data-top="#4ba3a5" data-mid="#1d5d74" data-deep="#0b2b3c" data-bottom="#030f16" title="Классический"></div>
+            <div class="color-option theme-red" data-top="#e74c3c" data-mid="#922b21" data-deep="#641e16" data-bottom="#1a0505" title="Красный"></div>
+            <div class="color-option theme-pink" data-top="#ff758c" data-mid="#c71585" data-deep="#7d053f" data-bottom="#250010" title="Розовый"></div>
+            <div class="color-option theme-white" data-top="#eaeded" data-mid="#a6acaf" data-deep="#5d6d7e" data-bottom="#1a252f" title="Белый"></div>
+            <div class="color-option theme-yellow" data-top="#f1c40f" data-mid="#b7950b" data-deep="#7e5109" data-bottom="#281802" title="Жёлтый"></div>
+            <div class="color-option theme-green" data-top="#2ecc71" data-mid="#1f9e55" data-deep="#115e33" data-bottom="#052512" title="Зелёный"></div>
+            <div class="color-option theme-purple" data-top="#9b5de5" data-mid="#6a1b9a" data-deep="#4a148c" data-bottom="#120024" title="Фиолетовый"></div>
+        </div>
+    </div>
+
+    <!-- Компонент 5: Док-панель управления (Mac Hotbar) -->
+    <header class="mac-hotbar">
+        <button class="play-btn">Играть</button>
+        
+        <div class="search-container">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Поиск игрока...">
+            <div class="search-results" id="searchResults"></div>
+        </div>
+        
+        <div class="fps-counter" id="fps">FPS: --</div>
+    </header>
+
+    <!-- Компонент 6: Центральный блок Liquid Glass -->
+    <div class="main-container">
+        <div class="glass-title-box" id="glassBox">
+            <h1>Hallo</h1>
+        </div>
+    </div>
+
+    <div class="scroll-hint">Листай вниз, чтобы погрузиться глубже</div>
+
+    <!-- ==========================================================================
+       КОД СЦЕНАРИЕВ JAVASCRIPT (УПРАВЛЕНИЕ ЛОГИКОЙ И СИСТЕМАМИ)
+       ========================================================================== */ -->
+    <script>
+        console.log("[System] Инициализация подводной графической оболочки...");
+
+        // Расширенное хранилище данных пользователей для интерактивного поиска
+        const playersDatabase = [
+            "Alex", "Admin", "Max", "Shark", "Neo", "Dolphin", "Bro", "CrazyFish", "Gamer123", "Kraken",
+            "Shadow", "Ghost", "Phoenix", "Titan", "Specter", "Viper", "Hunter", "Rogue", "Falcon", "Blaze",
+            "Thunder", "Storm", "Frost", "Blizzard", "Cyclone", "Avalanche", "Vortex", "Tornado", "Magma", "Volcano",
+            "Zero", "Alpha", "Omega", "Quantum", "Nexus", "Matrix", "Cipher", "Vector", "Pixel", "Byte",
+            "Glitch", "Bug", "Error", "Hack", "Cyber", "Synth", "Electro", "Laser", "Neon", "Static",
+            "Raptor", "Rex", "Talon", "Fang", "Claw", "Wolf", "Tiger", "Panther", "Lion", "Bear",
+            "Odin", "Thor", "Loki", "Zeus", "Hades", "Poseidon", "Ares", "Apollo", "Hermes", "Atlas",
+            "Arthur", "Merlin", "Lancelot", "Galahad", "Robin", "Hood", "Knight", "Paladin", "Ranger", "Mage",
+            "Scout", "Sniper", "Medic", "Soldier", "Pilot", "Captain", "Major", "General", "Colonel", "Chief",
+            "AlphaWolf", "DarkKnight", "NeonLight", "CyberPunk", "SpeedRunner", "ProGamer", "LuckyStrike", "GoldRush"
+        ];
+
+        // Глобальные стейт-переменные состояния пользовательской сессии
+        let nickname = "Player";
+        let nicknameChangesLeft = 2;
+        let isDrawing = false;
+
+        // Поиск DOM-элементов интерфейса авторизации
+        const authOverlay = document.getElementById('authOverlay');
+        const nicknameInput = document.getElementById('nicknameInput');
+        const startBtn = document.getElementById('startBtn');
+        const userStatus = document.getElementById('userStatus');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+
+        // Поиск DOM-элементов модального окна параметров профиля
+        const profileModal = document.getElementById('profileModal');
+        const editNameInput = document.getElementById('editNameInput');
+        const changesLeftLabel = document.getElementById('changesLeftLabel');
+        const closeProfileBtn = document.getElementById('closeProfileBtn');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+
+        // Инициализация двух холстов (Главный редактор и Мини-превью в плашке)
+        const canvas = document.getElementById('avatarCanvas');
+        const ctx = canvas.getContext('2d');
+        const previewCanvas = document.getElementById('avatarPreview');
+        const pCtx = previewCanvas.getContext('2d');
+        const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+
+        /**
+         * Заливает основной холст холст базовым монотонным цветом.
+         */
+        function initCanvas() {
+            console.log("[Canvas] Вызов первичной инициализации холста...");
+            ctx.fillStyle = '#112233';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        /**
+         * Инициализирует мини-превью дефолтным фоном (критическое исправление багов рендера)
+         */
+        function initPreviewCanvas() {
+            pCtx.fillStyle = '#112233';
+            pCtx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
+        }
+
+        // Набор слушателей мыши для обеспечения трекинга рисования на Canvas
+        canvas.addEventListener('mousedown', function(event) {
+            console.log("[Canvas] Обнаружен клик мыши. Старт рисования.");
+            isDrawing = true;
+        });
+
+        canvas.addEventListener('mouseup', function(event) {
+            console.log("[Canvas] Кнопка мыши отпущена. Остановка рисования.");
+            isDrawing = false;
+            ctx.beginPath();
+        });
+
+        canvas.addEventListener('mouseleave', function(event) {
+            isDrawing = false;
+            ctx.beginPath();
+        });
+
+        canvas.addEventListener('mousemove', draw);
+
+        /**
+         * Рассчитывает координаты и рисует сглаженные линии на главном холсте
+         */
+        function draw(e) {
+            if (isDrawing === false) {
+                return;
+            }
+            
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#ffffff';
+
+            ctx.lineTo(mouseX, mouseY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(mouseX, mouseY);
+            
+            // Прямое интерактивное пережатие картинки в мини-превью в процессе ведения мыши
+            updatePreview();
+        }
+
+        // Очистка холста по нажатию кнопки
+        clearCanvasBtn.addEventListener('click', function() {
+            console.log("[Canvas] Команда полной очистки рабочей области.");
+            initCanvas();
+            updatePreview();
+        });
+
+        /**
+         * Переносит данные графического буфера большого канваса на мини-канвас в левом углу.
+         */
+        function updatePreview() {
+            console.log("[Canvas Preview] Ремасштабирование растрового буфера 120x120 в 32x32...");
+            pCtx.clearRect(0, 0, 32, 32);
+            pCtx.drawImage(canvas, 0, 0, 120, 120, 0, 0, 32, 32);
+        }
+
+        /**
+         * Контролирует вход и решает проблему пустой аватарки при первичном появлении плашки.
+         */
+        function submitNickname() {
+            const name = nicknameInput.value.trim();
+            
+            if (name.length > 0) {
+                console.log("[Auth] Авторизация успешна. Установлен никнейм: " + name);
+                nickname = name;
+                
+                // Исчезновение приветственного экрана
+                authOverlay.style.opacity = '0';
+                setTimeout(function() {
+                    authOverlay.style.display = 'none';
+                }, 500);
+                
+                // Обновление текстового узла имени
+                usernameDisplay.textContent = nickname;
+                
+                // Выдвижение плашки из-за левого экрана
+                userStatus.style.transform = 'translateX(0px)';
+                
+                // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ ХОЛСТА: Каскадный рендер буфера для избежания пустой картинки
+                initCanvas();
+                initPreviewCanvas();
+                
+                setTimeout(updatePreview, 50);
+                setTimeout(updatePreview, 150);
+                setTimeout(updatePreview, 300);
+            } else {
+                console.warn("[Auth] Попытка входа с пустым полем имени пользователя.");
+            }
+        }
+
+        // Привязка обработчиков на кнопку входа и клавишу Enter
+        startBtn.addEventListener('click', submitNickname);
+        nicknameInput.addEventListener('keydown', function(e) { 
+            if (e.key === 'Enter') {
+                submitNickname(); 
+            }
+        });
+
+        // Открытие настроек профиля по клику на плашку статуса
+        userStatus.addEventListener('click', function() {
+            console.log("[Modal] Открытие интерфейса редактирования профиля.");
+            editNameInput.value = nickname;
+            changesLeftLabel.textContent = "Осталось смен: " + nicknameChangesLeft;
+            
+            if (nicknameChangesLeft <= 0) {
+                editNameInput.disabled = true;
+                console.log("[Modal] Лимит смены никнейма исчерпан. Поле заблокировано.");
+            }
+            
+            profileModal.style.display = 'flex';
+        });
+
+        // Закрытие настроек профиля
+        closeProfileBtn.addEventListener('click', function() {
+            console.log("[Modal] Отмена изменений, закрытие окна.");
+            profileModal.style.display = 'none';
+        });
+
+        // Сохранение отредактированного профиля
+        saveProfileBtn.addEventListener('click', function() {
+            const newName = editNameInput.value.trim();
+            
+            if (newName.length > 0 && newName !== nickname && nicknameChangesLeft > 0) {
+                console.log("[Profile Изменение] Смена имени: " + nickname + " -> " + newName);
+                nickname = newName;
+                nicknameChangesLeft = nicknameChangesLeft - 1;
+                usernameDisplay.textContent = nickname;
+            }
+            
+            // Фиксация нарисованной аватарки
+            updatePreview();
+            profileModal.style.display = 'none';
+            console.log("[Profile Изменение] Данные успешно зафиксированы.");
+        });
+
+        // ==========================================================================
+        // ИНТЕЛЛЕКТУАЛЬНЫЙ МОДУЛЬ ПОИСКА И ФИЛЬТРАЦИИ ИГРОКОВ В РЕАЛЬНОМ ВРЕМЕНИ
+        // ==========================================================================
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', function() {
+            const query = searchInput.value.trim().toLowerCase();
+            searchResults.innerHTML = '';
+            
+            if (query.length === 0) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            console.log("[Search] Поиск совпадений по запросу: " + query);
+            
+            // Поиск элементов, содержащих подстроку запроса
+            const matches = playersDatabase.filter(function(player) {
+                return player.toLowerCase().includes(query);
+            });
+
+            if (matches.length > 0) {
+                matches.forEach(function(player) {
+                    const item = document.createElement('div');
+                    item.className = 'search-item';
+                    item.innerHTML = "<span>" + player + "</span><span class='search-status-online'></span>";
+                    
+                    item.addEventListener('click', function() {
+                        console.log("[Search] Выбран пользователь из списка результатов: " + player);
+                        searchInput.value = player;
+                        searchResults.style.display = 'none';
+                    });
+                    searchResults.appendChild(item);
+                });
+                searchResults.style.display = 'flex';
+            } else {
+                const noResultNode = document.createElement('div');
+                noResultNode.className = 'search-item';
+                noResultNode.style.color = 'rgba(255,255,255,0.4)';
+                noResultNode.style.cursor = 'default';
+                noResultNode.textContent = 'Никто не найден';
+                searchResults.appendChild(noResultNode);
+                searchResults.style.display = 'flex';
+            }
+        });
+
+        // Скрытие выпадающего списка поиска при клике на свободную область экрана
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // ==========================================================================
+        // СИСТЕМА УПРАВЛЕНИЯ ДИНАМИЧЕСКИМ СВЕТОМ И ЦВЕТОМ ОКЕАНА
+        // ==========================================================================
+        const paintBtn = document.getElementById('paintBtn');
+        const colorMenu = document.getElementById('colorMenu');
+        const root = document.documentElement;
+
+        paintBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            colorMenu.classList.toggle('active');
+            console.log("[Theme Engine] Переключение видимости меню палитры.");
+        });
+
+        document.addEventListener('click', function() {
+            colorMenu.classList.remove('active');
+        });
+
+        // Получение и накат кастомных переменных градиента на тег root (:root)
+        const colorOptions = document.querySelectorAll('.color-option');
+        colorOptions.forEach(function(option) {
+            option.addEventListener('click', function(e) {
+                const topColor = e.target.getAttribute('data-top');
+                const midColor = e.target.getAttribute('data-mid');
+                const deepColor = e.target.getAttribute('data-deep');
+                const bottomColor = e.target.getAttribute('data-bottom');
+                
+                console.log("[Theme Engine] Активация новой цветовой схемы. Верх: " + topColor);
+                
+                root.style.setProperty('--water-top', topColor);
+                root.style.setProperty('--water-mid', midColor);
+                root.style.setProperty('--water-deep', deepColor);
+                root.style.setProperty('--water-bottom', bottomColor);
+            });
+        });
+
+        // ==========================================================================
+        // СЛЕЖЕНИЕ ЗА КУРСОРОМ И ЭФФЕКТ ЖИДКОГО ТРЕКИНГА (LIQUID GLASS)
+        // ==========================================================================
+        const glassBox = document.getElementById('glassBox');
+        
+        glassBox.addEventListener('mousemove', function(e) {
+            const rect = glassBox.getBoundingClientRect();
+            const posX = e.clientX - rect.left;
+            const posY = e.clientY - rect.top;
+            
+            glassBox.style.setProperty('--mouse-x', posX + "px");
+            glassBox.style.setProperty('--mouse-y', posY + "px");
+        });
+
+        // ==========================================================================
+        // ВЫЧИСЛИТЕЛЬНЫЙ МОДУЛЬ ПРОИЗВОДИТЕЛЬНОСТИ СИСТЕМЫ (FPS COUNTER)
+        // ==========================================================================
+        const fpsElement = document.getElementById('fps');
+        let frameCount = 0;
+        let lastTime = performance.now();
+
+        /**
+         * Рекурсивный цикл расчета кадров в секунду на базе системных тиков браузера.
+         */
+        function countFPS() {
+            frameCount = frameCount + 1;
+            const now = performance.now();
+            
+            if (now >= lastTime + 1000) {
+                const fpsValue = Math.round((frameCount * 1000) / (now - lastTime));
+                fpsElement.textContent = "FPS: " + fpsValue;
+                frameCount = 0;
+                lastTime = now;
+            }
+            
+            requestAnimationFrame(countFPS);
+        }
+        
+        // Старт непрерывного мониторинга фреймрейта
+        requestAnimationFrame(countFPS);
+        console.log("[System] Оболочка полностью готова и запущена на исполнение.");
+    </script>
+</body>
+</html>
