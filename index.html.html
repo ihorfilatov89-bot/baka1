@@ -564,7 +564,6 @@
         function initCanvas() {
             ctx.fillStyle = '#112233';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            updatePreview();
         }
 
         // Рисование на аватарке
@@ -586,9 +585,15 @@
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
+            
+            // Обновляем превью прямо во время рисования для отзывчивости
+            updatePreview();
         }
 
-        clearCanvasBtn.addEventListener('click', initCanvas);
+        clearCanvasBtn.addEventListener('click', () => {
+            initCanvas();
+            updatePreview();
+        });
 
         function updatePreview() {
             pCtx.clearRect(0, 0, 32, 32);
@@ -605,7 +610,10 @@
                 
                 usernameDisplay.textContent = nickname;
                 userStatus.style.transform = 'translateX(0)';
+                
                 initCanvas();
+                // Небольшой таймаут, чтобы анимация translateX завершилась и элемент стал видимым для рендера
+                setTimeout(updatePreview, 100);
             }
         }
 
